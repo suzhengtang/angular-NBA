@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="angular.js"></script>
+    <script>
+        //创建模块
+        var app = angular.module('app',[]);
+        //创建控制器
+        app.controller("sztController",['$scope','$http',function ($scope,$http) {
+
+            $http({
+                url:"player.php",
+                method:"get"
+            }).success(function (res) {
+                console.log(res);
+                $scope.lists = res;
+            }).error(function (error) {
+                console.log(error);
+            })
+        }]);
+        //绑定模块
+        //绑定控制器
+    </script>
+
+</head>
+<body ng-app="app" ng-controller="sztController">
+<div class="header">NBA选票</div>
+<div class="content">
+    <ul class="content_h">
+        <li>
+            <p>搜索</p>
+            <input type="text" ng-model="listName">
+        </li>
+        <li>
+            <p>搜索</p>
+            <select ng-model="order">
+                <option value="">请选择</option>
+                <option value="-votes">票数</option>
+                <option value="name">姓名</option>
+                <option value="num">号码</option>
+            </select>
+        </li>
+    </ul>
+    <ul class="title">
+        <li></li>
+        <li>姓名</li>
+        <li>位置</li>
+        <li>号码</li>
+        <li>球队</li>
+        <li>票数</li>
+    </ul>
+    <!--
+        filter:'seachC'   全文检索
+        filter:{name:searchC} 指定字段进行搜索
+        filter:{name:searchC}:true  精确查找
+    -->
+    <ul class="title info" ng-repeat="play in lists | filter:{name:listName} | orderBy:order">
+        <li style="text-align: center;"><img  style="width: 60px; height: 40px" alt="" ng-src="img/players/{{play.thumb}}"></li>
+        <li><a href="#">{{play.name}}</a></li>
+        <li>{{play.position}}</li>
+        <li>{{play.num}}</li>
+        <li>{{play.team}}</li>
+        <li>{{play.votes}}</li>
+    </ul>
+
+</div>
+</body>
+</html>
